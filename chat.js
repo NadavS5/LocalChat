@@ -1,3 +1,5 @@
+import {addProgressItem, toggleProgress} from './progress.js'
+
 console.log("hello")
 // import {pipeline} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
 
@@ -20,18 +22,27 @@ function onMessageReceived(message) {
     switch (message.data.status) {
         case "initiate":
             console.log("initiate", message.data)
-
+            addProgressItem(message.data.file)
         case "progress":
-            console.log("item: ", message.data.file, "progress: ", message.data.progress, message.data)
+            // console.log("item: ", message.data.file, "progress: ", message.data.progress, message.data)
             break;
         case "ready":
             // console.log("model ready!")
-            prompt_input.setAttribute("disabled", "false")
+            prompt_input.removeAttribute("disabled")
             load_button.style.display = "none"
+            toggleProgress()
+            console.log("generate")
+            worker.postMessage({type: "generate", data: "hello"})
             break;
         case "loading":
             modelLoading = true
             // console.log(message)
+            break;
+        case "complete":
+            console.log(message)
+            break;
+        case "update":
+            console.log(message)
             break;
     }
 }

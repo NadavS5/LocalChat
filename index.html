@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Chat | Local LLMs in browser</title>
+    <script type="module" src="progress.js"></script>
     <script type="module" src="chat.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css" />
 
@@ -12,10 +13,10 @@
     <main>
         <h1>LocalChat</h1>
         <button id="load_btn">Load Model</button>
-        <div id="progress_wrapper">
+        <div disabled id="progress_wrapper">
             
         </div>
-        <input disabled ="true" id="prompt_input" type="text" placeholder="prompt"/>
+        <input disabled id="prompt_input" type="text" placeholder="prompt"/>
     </main>
 </body>
 </html>
