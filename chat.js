@@ -1,9 +1,58 @@
 console.log("hello")
-import {pipeline} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
+// import {pipeline} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
 
-console.log(pipeline)
+// console.log(pipeline)
+const prompt_input = document.querySelector("#prompt_input")
+const load_button = document.querySelector("#load_btn")
 
 
-// Allocate a pipeline for sentiment-analysis
-const pipe = await pipeline('text-generation', 'ibm-granite/granite-4.0-micro-base');
-const output = await generator(text);
+const worker= new Worker("/worker.js", {
+    type: "module",
+});
+
+let modelLoading = false
+// future prep for ts
+// function onMessageReceived(message: MessageEvent)
+function onMessageReceived(message) {
+    // console.log(message.data)
+
+
+    switch (message.data.status) {
+        case "initiate":
+            console.log("initiate", message.data)
+
+        case "progress":
+            console.log("item: ", message.data.file, "progress: ", message.data.progress, message.data)
+            break;
+        case "ready":
+            // console.log("model ready!")
+            prompt_input.setAttribute("disabled", "false")
+            load_button.style.display = "none"
+            break;
+        case "loading":
+            modelLoading = true
+            // console.log(message)
+            break;
+    }
+}
+function loadModel(e) {
+    console.log("loading model")
+    worker.postMessage({type: "load"})
+}
+
+load_button.addEventListener("click", loadModel)
+
+
+worker.addEventListener("message", onMessageReceived);
+worker.postMessage({ type: "check" }); // Do a feature check
+
+
+
+// // Allocate a pipeline for sentiment-analysis
+// const generator = await pipeline('text-generation', 'onnx-community/Qwen2.5-0.5B-Instruct',{ dtype: "q4", device: "webgpu" })
+// console.log("generating")
+// const output = await generator("hello");
+// console.log(output)
+// const input = document.querySelector("#prompt_input")
+// console.log(input)
+// console.log(input)
