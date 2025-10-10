@@ -8,3 +8,48 @@ button {
 input {
     width: 20vw;
 }
+
+.hidden {
+    display: none;
+}
+.hidden *, 
+.hidden *::before, 
+.hidden *::after {
+    display: none !important; /* hides all children and pseudo-elements */
+}
+
+#progress_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+.progress_bar {
+    position: relative;
+    width: 20vw;
+    height: 3vw;
+}
+
+.progress_bar::before {
+    content: attr(data-progress, "0%") " out of " attr(data-total, "?? bytes");
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.progress_bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--progress);
+    height: inherit;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    transition: width 0.3s ease;
+}

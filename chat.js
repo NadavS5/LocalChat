@@ -1,4 +1,4 @@
-import {addProgressItem, toggleProgress} from './progress.js'
+import {addProgressItem, setProgress, toggleProgress} from './progress.js'
 
 console.log("hello")
 // import {pipeline} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
@@ -21,34 +21,41 @@ function onMessageReceived(message) {
 
     switch (message.data.status) {
         case "initiate":
-            console.log("initiate", message.data)
             addProgressItem(message.data.file)
+            break;
         case "progress":
             // console.log("item: ", message.data.file, "progress: ", message.data.progress, message.data)
+            setProgress(message.data)
             break;
         case "ready":
             // console.log("model ready!")
             prompt_input.removeAttribute("disabled")
             load_button.style.display = "none"
             toggleProgress()
-            console.log("generate")
-            worker.postMessage({type: "generate", data: "hello"})
+            console.log("ready")
+            const messages = [
+                {"role": "system", "content": "You are a friendly chatbot who always responds in the style of a pirate",},
+                {"role": "user", "content": "write me a basic python code"},
+            ]   
+            worker.postMessage({type: "generate", data: messages})
             break;
         case "loading":
             modelLoading = true
             // console.log(message)
             break;
         case "complete":
-            console.log(message)
+            //toggle send button
             break;
         case "update":
-            console.log(message)
+            // message.data.output contains numtokens and tps
+            console.log(message.data.output)
             break;
     }
 }
 function loadModel(e) {
     console.log("loading model")
     worker.postMessage({type: "load"})
+    toggleProgress()
 }
 
 load_button.addEventListener("click", loadModel)
