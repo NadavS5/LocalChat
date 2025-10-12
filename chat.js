@@ -8,7 +8,7 @@ const prompt_input = document.querySelector("#prompt_input")
 const load_button = document.querySelector("#load_btn")
 
 
-const worker= new Worker("/worker.js", {
+const worker= new Worker("worker.js", {
     type: "module",
 });
 
