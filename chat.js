@@ -12,7 +12,7 @@ let message_history = [
 ]
 let generating = false
 
-const worker= new Worker("/worker.js", {
+const worker= new Worker("worker.js", {
     type: "module",
 });
 
